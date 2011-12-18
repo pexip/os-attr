@@ -1,3 +1,121 @@
+attr (1:2.4.46-5ubuntu1) precise; urgency=low
+
+  * Merge from Debian testing, remaining changes:
+    - Build-depend on gettext:any, since we only need it to run tools at
+      build-time.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Sat, 17 Dec 2011 19:49:26 -0800
+
+attr (1:2.4.46-5) unstable; urgency=low
+
+  * Add Debian epoch version to shlibs dependency.
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Sat, 03 Dec 2011 22:04:54 +1100
+
+attr (1:2.4.46-4) unstable; urgency=low
+
+  * Mark libattr1-dev Multi-Arch: same
+    Patch by Steve Langasek
+    Closes: 647855
+  * Build if autconf2.13 is installed
+    Add 12-643587-attr-autoconf-version-check.patch
+    Patch by Wookey
+    Closes: 643587
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Sat, 03 Dec 2011 21:25:23 +1100
+
+attr (1:2.4.46-3ubuntu1) precise; urgency=low
+
+  * Build-depend on gettext:any, since we only need it to run tools at
+    build-time.
+
+ -- Steve Langasek <steve.langasek@ubuntu.com>  Sat, 05 Nov 2011 17:34:57 +0000
+
+attr (1:2.4.46-3) unstable; urgency=medium
+
+  * libattr1: Don't pass "-Zbzip2 -z9" to dpkg-deb
+    Closes: 634090
+  * Don't ship .la files
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Sun, 17 Jul 2011 12:19:48 +1000
+
+attr (1:2.4.46-2) unstable; urgency=low
+
+  * Append 'libattr 1 libattr1 (>= 2.4.46-2)' to
+    debian/libattr1/DEBIAN/shlibs
+  * Remove debian/{attr,libattr1,libattr1-dev}.debhelper.log
+  * Set standards-version to 3.9.2
+  * Pass "-Zbzip2 -z9" to dpkg-deb
+  * Fix debian-rules-missing-recommended-target
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Mon, 04 Jul 2011 21:29:12 +1000
+
+attr (1:2.4.46-1) unstable; urgency=low
+
+  * New upstream release (Closes: #626622).
+  - All patches are incorporated upstream.
+  * Add multiarch support (Closes: #528141).
+
+ -- Luk Claes <luk@debian.org>  Fri, 24 Jun 2011 07:37:19 +0200
+
+attr (1:2.4.44-3) unstable; urgency=medium
+
+  * Add myself as comaintainer
+  * Use bash in build process (Closes: #621927)
+  * Pass host & build to allow cross builds to succeed (Closes: #284044) 
+
+ -- Luk Claes <luk@debian.org>  Sat, 28 May 2011 15:48:08 +0200
+
+attr (1:2.4.44-2) unstable; urgency=low
+
+  * Source format is 3.0 (quilt)
+  * Add upstream patches 
+    02-fix_memory_leak_in_attr_copy_action.patch
+    03-pull_in_string.h.patch
+    05-eliminate_a_memory_leak.patch
+    06-eliminate_a_double_free.patch
+    07-fix_thinko_in_restore.patch
+  * Fix debhelper-but-no-misc-depends
+  * Fix out-of-date-standards-version
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Tue, 08 Jun 2010 13:58:30 +1000
+
+attr (1:2.4.44-1) unstable; urgency=low
+
+  * New upstream release
+  * Fix out-of-date-standards-version
+  * Fix copyright-refers-to-versionless-license-file
+  * Update homepage in debian/control
+  * Add Vcs-Git and Vcs-Browser to debian/control
+  * Update download page in debian/copyright
+  * Update debian/watch
+  * Add automake as a build-dependency
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Tue, 25 Aug 2009 11:23:53 +1000
+
+attr (1:2.4.43-3) unstable; urgency=low
+
+  [ Cyril Brulebois ]
+  * Backport the following fix by Petr Salinger from upstream to fix
+    FTBFS on GNU/kFreeBSD (Closes: #531950): [git commit b4636a4e9e]
+    On Linux, ENOATTR aliases to ENODATA. On other operating systems
+    like Irix and BSD*, ENOATTR is a separate error number. Therefore,
+    protect the check on “err == ENODATA” with “#ifdef __linux__” in
+    strerror_ea() in both getfattr/getfattr.c and setfattr/setfattr.c
+
+  [ Anibal Monsalve Salazar ]
+  * Standards version is 3.8.2
+  * DH compatibility level is 7
+  * Fix "incorrect-libdir-in-la-file usr/lib/libattr.la /lib != /usr/lib"
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Sat, 27 Jun 2009 00:29:24 +1000
+
+attr (1:2.4.43-2) unstable; urgency=high
+
+  * Remove --enable-lib64=yes in Makefile (closes: #514017)
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Tue, 10 Feb 2009 20:32:30 +1100
+
 attr (1:2.4.43-1) unstable; urgency=low
 
   * New upstream release
@@ -301,6 +419,3 @@ attr (1.0.2) unstable; urgency=low
 
  -- Nathan Scott <nathans@debian.org>  Wed, 25 Apr 2001 12:19:15 +1000
 
-Local variables:
-mode: debian-changelog
-End:

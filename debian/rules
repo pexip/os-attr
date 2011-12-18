@@ -1,5 +1,7 @@
 #!/usr/bin/make -f
 
+export DH_VERBOSE=1
+
 package = attr
 develop = lib$(package)1-dev
 library = lib$(package)1
@@ -13,9 +15,24 @@ pkglib = DIST_ROOT=`pwd`/$(dirlib); export DIST_ROOT;
 stdenv = @GZIP=-q; export GZIP;
 
 options = export DEBUG=-DNDEBUG DISTRIBUTION=debian \
-	  INSTALL_USER=root INSTALL_GROUP=root ;
+	  INSTALL_USER=root INSTALL_GROUP=root \
+	  CONFIG_SHELL=/bin/bash ;
 checkdir = test -f debian/rules
 
+DEB_HOST_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
+DEB_BUILD_GNU_TYPE ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
+
+ifneq ($(DEB_BUILD_GNU_TYPE), $(DEB_HOST_GNU_TYPE))
+        LOCAL_CONFIGURE_OPTIONS += --host $(DEB_HOST_GNU_TYPE) --build $(DEB_BUILD_GNU_TYPE)
+endif
+
+LOCAL_CONFIGURE_OPTIONS += \
+		--libdir=/lib/$(DEB_HOST_MULTIARCH) \
+		--libexecdir=/usr/lib/$(DEB_HOST_MULTIARCH)
+
+build-arch: build
+build-indep: build
 build: built
 built: config
 	@echo "== dpkg-buildpackage: build" 1>&2
@@ -28,7 +45,7 @@ config: .census
 .census:
 	@echo "== dpkg-buildpackage: configure" 1>&2
 	$(checkdir)
-	$(options) $(MAKE) configure
+	$(options) $(MAKE) configure LOCAL_CONFIGURE_OPTIONS="$(LOCAL_CONFIGURE_OPTIONS)"
 	touch .census
 
 clean:
@@ -50,8 +67,14 @@ binary-arch: checkroot built
 	$(pkglib) $(MAKE) -C . install-lib
 	$(pkgme)  $(MAKE) -C build src-manifest
 
+	rm -f $(dirdev)/usr/lib/$(DEB_HOST_MULTIARCH)/libattr.la
+	rm -f $(dirdev)/lib/$(DEB_HOST_MULTIARCH)/libattr.la
+
 	-rm -rf $(dirdev)/usr/share/doc/attr
 	-rm -rf $(dirlib)/usr/share/doc/attr
+	-rm -rf $(dirlib)/usr/share/locale
+	-rm -rf $(dirlib)/usr/share/man
+	-rm -rf $(dirlib)/usr/bin
 
 	dh_installdocs
 	dh_installchangelogs
@@ -59,13 +82,15 @@ binary-arch: checkroot built
 	dh_compress
 	dh_fixperms
 	dh_makeshlibs -N $(library)
-	dh_makeshlibs -p $(library) -V 'libattr1 (>= 2.4.41-1)'
+	dh_makeshlibs -p $(library) -V 'libattr1 (>= 1:2.4.46-5)'
 	dh_installdeb
 	dh_shlibdeps
 	dh_gencontrol
 
 	dh_md5sums
-	dh_builddeb
+	dh_builddeb -p$(package) -- -Zbzip2 -z9
+	dh_builddeb -p$(develop) -- -Zbzip2 -z9
+	dh_builddeb -p$(library)
 
 binary: binary-indep binary-arch
 
