@@ -1,14 +1,16 @@
 Source: attr
 Section: utils
 Priority: optional
-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
+Maintainer: Pexip AS <packaging@pexip.com>
+XSBC-Pexip-Original-Maintainer: Ubuntu Developers <ubuntu-devel-discuss@lists.ubuntu.com>
 XSBC-Original-Maintainer: Anibal Monsalve Salazar <anibal@debian.org>
-Uploaders: Nathan Scott <nathans@debian.org>, Luk Claes <luk@debian.org>
+XSBC-Pexip-Original-Uploaders: Nathan Scott <nathans@debian.org>, Luk Claes <luk@debian.org>
 Build-Depends: autoconf, automake, debhelper (>= 8.1.3), gettext:any, libtool
 Standards-Version: 3.9.2
 Homepage: http://savannah.nongnu.org/projects/attr/
 Vcs-Git: git://git.savannah.nongnu.org/attr.git
 Vcs-Browser: http://git.savannah.gnu.org/cgit/attr.git
+XS-Pexip-Upstream: http://archive.ubuntu.com/ubuntu/ precise
 
 Package: attr
 Depends: ${shlibs:Depends}, ${misc:Depends}

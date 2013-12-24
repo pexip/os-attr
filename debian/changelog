@@ -1,3 +1,9 @@
+attr (1:2.4.46-5ubuntu1pexip1) pexip; urgency=low
+
+  * Prepare Pexip packaging
+
+ -- John-Mark Bell <jmb@pexip.com>  Tue, 24 Dec 2013 13:11:07 +0000
+
 attr (1:2.4.46-5ubuntu1) precise; urgency=low
 
   * Merge from Debian testing, remaining changes:
