@@ -1,3 +1,71 @@
+attr (1:2.4.47-2pexip1) pexip; urgency=low
+
+  * Migrate to Jessie
+
+ -- John-Mark Bell <jmb@pexip.com>  Mon, 20 Feb 2017 10:10:12 +0000
+
+attr (1:2.4.47-2) unstable; urgency=medium
+
+  * Standards-Version: 3.9.5.
+  * Remove Luk Claes as uploader.
+    Closes: #748493.
+  * Add attr-udeb and libattr1-udeb binary packages, for use by
+    live-installer to copy extended attributes.
+    Patch by Colin Watson.
+    Closes: #744037.
+  * Omit Vcs-* fields.
+    Closes: #744028.
+  * Use default compression for binary packages.
+  * Refresh patches.
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Mon, 08 Sep 2014 08:27:07 +0100
+
+attr (1:2.4.47-1) unstable; urgency=low
+
+  * New upstream release 2.4.47
+    Fix "getfattr should indicate missing xattrs via exit value"
+    Closes: #520659
+  * Update debian/rules
+    Upstream renamed build/ to package/
+  * Upstream renamed configure.in to configure.ac and didn't ship it.
+    Add 01-configure.in.patch
+  * Fix missing ldflags
+    Add 02-687531-fix-missing-ldflags.patch
+    Patch by Simon Ruderich
+    Closes: #687531
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Mon, 20 May 2013 19:07:56 +1000
+
+attr (1:2.4.46-8) unstable; urgency=low
+
+  * Enable hardening build flags 
+    Closes: #674003
+  * DH compatibility level is 9
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Wed, 13 Jun 2012 17:52:45 +1000
+
+attr (1:2.4.46-7) unstable; urgency=low
+
+  * Build-depend on gettext. If it build-depends on gettext:any,
+    the auto-builders stop with the message below.
+    Dependency installability problem for attr on armel, armhf, hurd-i386,
+    kfreebsd-amd64, kfreebsd-i386, mips, powerpc, s390, s390x and sparc:
+    attr (= 1:2.4.46-6) build-depends on missing:
+    - not-existing-build-dependency-for-any
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 10 May 2012 17:35:17 +1000
+
+attr (1:2.4.46-6) unstable; urgency=low
+
+  * Merge 1:2.4.46-5ubuntu1
+    - Build-depend on gettext:any, since we only need it to run tools at
+      build-time.
+  * Use /bin/sh as CONFIG_SHELL in debian/rules
+    Closes: #671903
+  * Fix out-of-date-standards-version
+
+ -- Anibal Monsalve Salazar <anibal@debian.org>  Thu, 10 May 2012 13:21:50 +1000
+
 attr (1:2.4.46-5ubuntu1pexip1) pexip; urgency=low
 
   * Prepare Pexip packaging
