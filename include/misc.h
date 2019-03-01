@@ -9,9 +9,9 @@
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+  GNU Lesser General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
+  You should have received a copy of the GNU Lesser General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -21,3 +21,5 @@ extern const char *quote(const char *str, const char *quote_chars);
 extern char *unquote(char *str);
 
 extern char *next_line(FILE *file);
+
+#include "nls.h"

@@ -16,14 +16,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+#include "config.h"
+
 #include <errno.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/types.h>
+#include <sys/xattr.h>
 
-#include <attr/xattr.h>
 #include <attr/attributes.h>
+
+#ifndef ENOATTR
+# define ENOATTR ENODATA
+#endif
 
 #undef MAXNAMELEN
 #define MAXNAMELEN 256
@@ -104,19 +110,26 @@ int
 attr_get(const char *path, const char *attrname, char *attrvalue,
 	 int *valuelength, int flags)
 {
+	ssize_t (*get)(const char *, const char *, void *, size_t) =
+		flags & ATTR_DONTFOLLOW ? lgetxattr : getxattr;
 	int c, compat;
 	char name[MAXNAMELEN+16];
 
 	for (compat = 0; compat < 2; compat++) {
 		if ((c = api_convert(name, attrname, flags, compat)) < 0)
 			return c;
-		if (flags & ATTR_DONTFOLLOW)
-			c = lgetxattr(path, name, attrvalue, *valuelength);
-		else
-			c =  getxattr(path, name, attrvalue, *valuelength);
+		c = get(path, name, attrvalue, *valuelength);
 		if (c < 0 && (errno == ENOATTR || errno == ENOTSUP))
 			continue;
 		break;
+	}
+	if (c < 0 && errno == ERANGE) {
+		int size = get(path, name, NULL, 0);
+		if (size >= 0) {
+			*valuelength = size;
+			errno = E2BIG;
+		}
+		return c;
 	}
 	if (c < 0)
 		return c;
@@ -138,6 +151,14 @@ attr_getf(int fd, const char *attrname, char *attrvalue,
 		if (c < 0 && (errno == ENOATTR || errno == ENOTSUP))
 			continue;
 		break;
+	}
+	if (c < 0 && errno == ERANGE) {
+		int size = fgetxattr(fd, name, NULL, 0);
+		if (size >= 0) {
+			*valuelength = size;
+			errno = E2BIG;
+		}
+		return c;
 	}
 	if (c < 0)
 		return c;
@@ -302,7 +323,11 @@ attr_list(const char *path, char *buffer, const int buffersize, int flags,
 			continue;
 		if (attr_list_pack(name, vlength, buffer, buffersize,
 				   &start_offset, &end_offset)) {
-			cursor->opaque[0] = count;
+			if (cursor->opaque[0] == count - 1) {
+				errno = EINVAL;
+				return -1;
+			}
+			cursor->opaque[0] = count - 1;
 			break;
 		}
 	}
@@ -342,7 +367,11 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
 			continue;
 		if (attr_list_pack(name, vlength, buffer, buffersize,
 				   &start_offset, &end_offset)) {
-			cursor->opaque[0] = count;
+			if (cursor->opaque[0] == count - 1) {
+				errno = EINVAL;
+				return -1;
+			}
+			cursor->opaque[0] = count - 1;
 			break;
 		}
 	}
@@ -356,6 +385,7 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
  * apart in userspace and make individual syscalls for each.
  */
 
+#pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 static int
 attr_single(const char *path, attr_multiop_t *op, int flags)
 {
@@ -363,13 +393,13 @@ attr_single(const char *path, attr_multiop_t *op, int flags)
 
 	errno = -EINVAL;
 	flags |= op->am_flags;
-	if (op->am_opcode & ATTR_OP_GET)
+	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_get(path, op->am_attrname, op->am_attrvalue,
 				&op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_SET)
+	else if (op->am_opcode == ATTR_OP_SET)
 		r = attr_set(path, op->am_attrname, op->am_attrvalue,
 				op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_REMOVE)
+	else if (op->am_opcode == ATTR_OP_REMOVE)
 		r = attr_remove(path, op->am_attrname, flags);
 	return r;
 }
@@ -381,16 +411,17 @@ attr_singlef(const int fd, attr_multiop_t *op, int flags)
 
 	errno = -EINVAL;
 	flags |= op->am_flags;
-	if (op->am_opcode & ATTR_OP_GET)
+	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_getf(fd, op->am_attrname, op->am_attrvalue,
 				&op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_SET)
+	else if (op->am_opcode == ATTR_OP_SET)
 		r = attr_setf(fd, op->am_attrname, op->am_attrvalue,
 				op->am_length, flags);
-	else if (op->am_opcode & ATTR_OP_REMOVE)
+	else if (op->am_opcode == ATTR_OP_REMOVE)
 		r = attr_removef(fd, op->am_attrname, flags);
 	return r;
 }
+#pragma GCC diagnostic warning "-Wdeprecated-declarations"
 
 /*
  * Operate on multiple attributes of the same object simultaneously

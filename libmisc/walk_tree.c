@@ -17,6 +17,8 @@
   License along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include "config.h"
+
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <unistd.h>
@@ -34,16 +36,16 @@ struct entry_handle {
 	dev_t dev;
 	ino_t ino;
 	DIR *stream;
-	off_t pos;
+	long pos;
 };
 
-struct entry_handle head = {
+static struct entry_handle head = {
 	.next = &head,
 	.prev = &head,
 	/* The other fields are unused. */
 };
-struct entry_handle *closed = &head;
-unsigned int num_dir_handles;
+static struct entry_handle *closed = &head;
+static unsigned int num_dir_handles;
 
 static int walk_tree_visited(dev_t dev, ino_t ino)
 {
@@ -102,8 +104,8 @@ static int walk_tree_rec(const char *path, int walk_flags,
 	 *      a link and follow_symlinks
 	 */
         if ((flags & WALK_TREE_RECURSIVE) &&
-	   (!(flags & WALK_TREE_SYMLINK) && S_ISDIR(st.st_mode)) ||
-	   ((flags & WALK_TREE_SYMLINK) && follow_symlinks)) {
+	    ((!(flags & WALK_TREE_SYMLINK) && S_ISDIR(st.st_mode)) ||
+	     ((flags & WALK_TREE_SYMLINK) && follow_symlinks))) {
 		struct dirent *entry;
 
 		/*

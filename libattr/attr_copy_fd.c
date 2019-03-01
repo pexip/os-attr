@@ -1,18 +1,18 @@
-/* Copyright (C) 2002 Andreas Gruenbacher <agruen@suse.de>, SuSE Linux AG.
+/*
+  Copyright (C) 2002 Andreas Gruenbacher <agruen@suse.de>, SuSE Linux AG.
 
-  This program is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Lesser General Public License as published by
-  the Free Software Foundation; either version 2.1 of the License, or (at
-  your option) any later version.
+  This program is free software; you can redistribute it and/or
+  modify it under the terms of the GNU Lesser General Public
+  License as published by the Free Software Foundation; either
+  version 2.1 of the License, or (at your option) any later version.
 
-  This program is distributed in the hope that it will be useful, but WITHOUT
-  ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-  FITNESS FOR A PARTICULAR PURPOSE.  See the GNU Lesser General Public
-  License for more details.
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+  Lesser General Public License for more details.
 
-  You should have received a copy of the GNU Lesser General Public
-  License along with this program.  If not, see
-  <http://www.gnu.org/licenses/>.
+  You should have received a copy of the GNU Lesser General Public License
+  along with this manual.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Copy extended attributes between files. */
@@ -22,6 +22,7 @@
 #endif
 
 #include <sys/types.h>
+# include <sys/xattr.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -30,16 +31,13 @@
 # include <alloca.h>
 #endif
 
-#if defined(HAVE_ATTR_XATTR_H)
-# include <attr/xattr.h>
-#endif
-
 #if defined(HAVE_ATTR_LIBATTR_H)
 # include "attr/libattr.h"
 #endif
 
 #define ERROR_CONTEXT_MACROS
 #include "error_context.h"
+#include "nls.h"
 
 #if !defined(ENOTSUP)
 # define ENOTSUP (-1)
@@ -115,7 +113,7 @@ attr_copy_fd(const char *src_path, int src_fd,
 			const char *qpath = quote (ctx, src_path);
 			const char *qname = quote (ctx, name);
 			error (ctx, _("getting attribute %s of %s"),
-			       qpath, qname);
+			       qname, qpath);
 			quote_free (ctx, qname);
 			quote_free (ctx, qpath);
 			ret = -1;
@@ -143,16 +141,16 @@ attr_copy_fd(const char *src_path, int src_fd,
 				setxattr_ENOTSUP++;
 			else {
 				const char *qpath = quote (ctx, dst_path);
-
 				if (errno == ENOSYS) {
 					error (ctx, _("setting attributes for "
 					       "%s"), qpath);
 					ret = -1;
-					break;  /* no hope of getting any further */
+					/* no hope of getting any further */
+					break;
 				} else {
 					const char *qname = quote (ctx, name);
-					error (ctx, _("setting attribute %s for %s"),
-					       qname, qpath);
+					error (ctx, _("setting attribute %s for "
+					       "%s"), qname, qpath);
 					quote_free (ctx, qname);
 					ret = -1;
 				}

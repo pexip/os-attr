@@ -22,6 +22,7 @@
 #endif
 
 #include <sys/types.h>
+# include <sys/xattr.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
@@ -30,16 +31,13 @@
 # include <alloca.h>
 #endif
 
-#if defined(HAVE_ATTR_XATTR_H)
-# include <attr/xattr.h>
-#endif
-
 #if defined(HAVE_ATTR_LIBATTR_H)
 # include "attr/libattr.h"
 #endif
 
 #define ERROR_CONTEXT_MACROS
 #include "error_context.h"
+#include "nls.h"
 
 #if !defined(ENOTSUP)
 # define ENOTSUP (-1)
@@ -64,7 +62,7 @@ attr_copy_file(const char *src_path, const char *dst_path,
 	       struct error_context *ctx)
 {
 #if defined(HAVE_LISTXATTR) && defined(HAVE_GETXATTR) && defined(HAVE_SETXATTR)
-  	int ret = 0;
+	int ret = 0;
 	ssize_t size;
 	char *names = NULL, *end_names, *name, *value = NULL;
 	unsigned int setxattr_ENOTSUP = 0;
