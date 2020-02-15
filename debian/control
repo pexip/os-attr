@@ -9,7 +9,7 @@ Standards-Version: 3.9.5
 Homepage: http://savannah.nongnu.org/projects/attr/
 #Vcs-Git: git://git.savannah.nongnu.org/attr.git
 #Vcs-Browser: http://git.savannah.gnu.org/cgit/attr.git
-XS-Pexip-Upstream: http://ftp.debian.org/debian/ stretch
+XS-Pexip-Upstream: http://ftp.debian.org/debian/ buster
 
 Package: attr
 Depends: ${shlibs:Depends}, ${misc:Depends}, libattr1 (= ${binary:Version})
