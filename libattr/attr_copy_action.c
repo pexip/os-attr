@@ -15,7 +15,8 @@
   along with this manual.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <alloca.h>
+#include "config.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -27,7 +28,7 @@
 #define ERROR_CONTEXT_MACROS
 #include "error_context.h"
 
-#define ATTR_CONF "/etc/xattr.conf"
+#define ATTR_CONF SYSCONFDIR "/xattr.conf"
 
 struct attr_action {
 	struct attr_action *next;

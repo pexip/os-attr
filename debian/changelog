@@ -1,3 +1,143 @@
+attr (1:2.4.48-4) unstable; urgency=medium
+
+  * Replace gettext with autopoint in autopkgtest Depends fields.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 01 Mar 2019 23:03:21 +0100
+
+attr (1:2.4.48-3) unstable; urgency=medium
+
+  * Run «autoreconf -f -i» in autopkgtests to handle modified build system
+    sources due to patching, triggering regeneration of the build system,
+    and failing because the exact tool versions are not available.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 01 Mar 2019 13:38:28 +0100
+
+attr (1:2.4.48-2) unstable; urgency=medium
+
+  * Run upstream test suite separately from the build, so that we can ignore
+    just the test suite errors. This was in practice not a problem as we then
+    call the install target, so we'd catch errors later on, but still wrong.
+  * Remove now unnecessary debian/clean file.
+  * Fix silent and verbose builds:
+    - Only pass VERBOSE=1 to the check target where it is relevant.
+    - Pass --disable-silent-rules to configure only when terse is not present.
+  * Remove spurious escaped newline in «make install».
+  * Uniformize assignment of --build and --host options for configure.
+  * Reorder .PHONY entries.
+  * Add minimally required build dependencies to autopkgtest Depends fields.
+  * Rename attr-autoconf-version-check.patch to
+    build-require-autoconf-version.patch and improve its description fields.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 01 Mar 2019 01:26:21 +0100
+
+attr (1:2.4.48-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Add upstream signing key, and modify debian/watch file to fetch and
+      check orig tarball signatures.
+    - Refresh patches:
+      + 00-no-debian-Makefile.patch: Remove, fixed upstream.
+      + 01-configure.in.patch: Ditto.
+      + 02-687531-fix-missing-ldflags.patch: Ditto.
+      + 15-test-perl-warning.patch: Update, rename to test-perl-warning.patch.
+      + 12-643587-attr-autoconf-version-check.patch: Update, rename to
+        attr-autoconf-version-check.patch.
+    - Make the syscall wrappers be Linux-specific again.
+      + syscalls-linux.patch: New patch.
+    - Upstream removed the <attr/xattr.h> header, put a compat header back
+      that uses <sys/xattr.h> for the heavy lifting. Closes: #782428
+      + compat-xattr-header.patch: New patch.
+    - Pull patches from upstream git master:
+      + 0001-test-escape-left-brace-in-a-regex-in-test-run.patch
+      + 0002-man-fix-bold-style-in-SEE-ALSO-section.patch
+      + 0003-man-standardize-AUTHORS-section.patch
+      + 0004-Enable-large-file-support-on-systems-that-do-not-ena.patch
+      + 0005-getfattr.1-by-default-only-user-namespace-attributes.patch
+      + 0006-attr_list.3-Fix-the-attributes.h-include-path.patch
+      + 0007-Switch-back-to-syscall.patch
+      + 0008-attr_multi-attr_multif-Don-t-set-errno-to-EINVAL.patch
+      + 0009-attr_list-attr_listf-Guard-against-unterminated-buff.patch
+    - Update attr_copy_action in symbols file for newly assigned version node.
+    - Update minimum version for shlibs file.
+    - Update debian/rules to handle the modernized upstream build system.
+    - Update autopkgtests to handle the modernized upstream build system.
+    - Update debian/copyright file.
+    - The package should build now on musl. Closes: #782830
+  * Include new pkg-config file.
+  * Include /etc/xattr.conf in shared library package, required by
+    attr_copy_action() function.
+  * Add Build-Depends-Package field to the symbols file.
+  * Enable all hardening build flags.
+  * Remove Multi-Arch fields from udeb packages.
+  * Mark autopkgtest tests as flaky instead of superficial, they do not cope
+    well with the Debian buildd environment.
+  * Add build-essential to autopkgtest Depends fields.
+  * Remove trailing whitespace and blank lines from debian/copyright.
+  * Fix several typos in the man pages.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 28 Feb 2019 03:55:50 +0100
+
+attr (1:2.4.47-4) unstable; urgency=medium
+
+  * Restrict xattr syscall symbols as arch=linux-any. This fixes the builds
+    on non-Linux systems.
+  * Reorganize binary package fields.
+  * Do not install unnecessary or repeated internal documentation.
+  * Fix upstream test suite:
+    - Fix perl warning due to deprecated regex construct.
+    - Remove bogus @ from shell subcommand in Makefile.
+  * Hook the upstream test suite into both the package build and autopkgtest.
+    For now ignore failures, and mark it as superficial.
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 16 Feb 2019 02:42:20 +0100
+
+attr (1:2.4.47-3) unstable; urgency=medium
+
+  * Salvage package, with ok from co-maintainer.
+    Thanks for all their past work on this package. Closes: #921975
+  * Remove debian/Makefile and debian/configure.ac leftovers.
+    - Add patch to avoid upstream Makefile entering the debian/ directory.
+  * Update upstream URL (working and https) in debian/watch file.
+  * Update debian/watch to format version 4.
+  * Line-wrap and add a trailing comma to dependency field values.
+  * Update Homepage field URL to use https.
+  * Update debian/copyright:
+    - Remove original packaging information, present in the changelog.
+    - Switch to machine parseable format 1.0.
+    - Update copyright statements.
+  * Remove ancient Conflicts against xfsdump and attr.
+  * Remove obsolete Priority extra.
+  * Remove Priority required from shared library package.
+  * Cleanup debian/rules:
+    - Use $(CURDIR) instead of `pwd`.
+    - Remove phase prints and comment out DH_VERBOSE, make it verbose enough.
+    - Use dpkg architecture.mk fragment instead of ad-hoc variable assignment.
+    - Use dh_testdir instead of open-coding it.
+    - Use dh_testroot instead of open-coding it.
+    - Use dh_clean instead of ad-hoc cleaning, and remove upstream
+      configure.lineno in debian/clean. Closes: #867266
+    - Do not create an upstream source tarball distribution.
+    - Remove unused stdenv variable.
+    - Use dh_install, dh_installdocs, dh_installman and dh_link instead of
+      calling the upstream build system multiple times to install into the
+      package dirs.
+    - Rename LOCAL_CONFIGURE_OPTIONS to confflags.
+    - Set configure flags properly for cross-building.
+  * Switch to debhelper compatibility level 11.
+  * Set Rules-Requires-Root to no, and stop setting INSTALL_USER and
+    INSTALL_GROUP, as the build system will default to the current user.
+  * Switch to Standards-Version 4.3.0.
+  * Stop installing man pages from section 2 and 5, those are maintained by
+    the manpages upstream project. Closes: #841719
+  * Add a shared library symbols file. Closes: #677566
+    Thanks to Ivo De Decker <ivo.dedecker@ugent.be>.
+  * Improve a bit the package descriptions.
+  * Remove ancient versioned dpkg-dev Build-Depends.
+  * Perform a proper and correct /usr-merge transition by moving the package
+    contents from / to /usr.
+
+ -- Guillem Jover <guillem@debian.org>  Tue, 12 Feb 2019 03:42:45 +0100
+
 attr (1:2.4.47-2+b2pexip1) pexip; urgency=low
 
   * Migrate to Stretch
@@ -44,7 +184,7 @@ attr (1:2.4.47-1) unstable; urgency=low
 
 attr (1:2.4.46-8) unstable; urgency=low
 
-  * Enable hardening build flags 
+  * Enable hardening build flags
     Closes: #674003
   * DH compatibility level is 9
 
@@ -142,14 +282,14 @@ attr (1:2.4.44-3) unstable; urgency=medium
 
   * Add myself as comaintainer
   * Use bash in build process (Closes: #621927)
-  * Pass host & build to allow cross builds to succeed (Closes: #284044) 
+  * Pass host & build to allow cross builds to succeed (Closes: #284044)
 
  -- Luk Claes <luk@debian.org>  Sat, 28 May 2011 15:48:08 +0200
 
 attr (1:2.4.44-2) unstable; urgency=low
 
   * Source format is 3.0 (quilt)
-  * Add upstream patches 
+  * Add upstream patches
     02-fix_memory_leak_in_attr_copy_action.patch
     03-pull_in_string.h.patch
     05-eliminate_a_memory_leak.patch
@@ -219,7 +359,7 @@ attr (1:2.4.41-1) unstable; urgency=low
   * Bump DH_COMPAT.
 
  -- Niv Sardi <xaiki@debian.org>  Mon, 11 Feb 2008 17:45:43 +1100
-  
+
 attr (1:2.4.39-1) unstable; urgency=low
 
   * New upstream release
@@ -498,4 +638,3 @@ attr (1.0.2) unstable; urgency=low
   * Initial release.
 
  -- Nathan Scott <nathans@debian.org>  Wed, 25 Apr 2001 12:19:15 +1000
-

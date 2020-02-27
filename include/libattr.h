@@ -2,16 +2,16 @@
   Copyright (C) 2009  Andreas Gruenbacher <agruen@suse.de>
 
   This program is free software: you can redistribute it and/or modify it
-  under the terms of the GNU General Public License as published by
-  the Free Software Foundation, either version 2 of the License, or
+  under the terms of the GNU Lesser General Public License as published by
+  the Free Software Foundation, either version 2.1 of the License, or
   (at your option) any later version.
 
   This program is distributed in the hope that it will be useful,
   but WITHOUT ANY WARRANTY; without even the implied warranty of
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-  GNU General Public License for more details.
+  GNU Lesser General Public License for more details.
 
-  You should have received a copy of the GNU General Public License
+  You should have received a copy of the GNU Lesser General Public License
   along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
@@ -24,20 +24,20 @@ extern "C" {
 
 struct error_context;
 
-extern int attr_copy_file (const char *, const char *,
+EXPORT int attr_copy_file (const char *, const char *,
 			   int (*) (const char *, struct error_context *),
 			   struct error_context *);
-extern int attr_copy_fd (const char *, int, const char *, int,
+EXPORT int attr_copy_fd (const char *, int, const char *, int,
 			 int (*) (const char *, struct error_context *),
 			 struct error_context *);
 
 /* Keep this function for backwards compatibility. */
-extern int attr_copy_check_permissions(const char *, struct error_context *);
+EXPORT int attr_copy_check_permissions(const char *, struct error_context *);
 
 #define ATTR_ACTION_SKIP	1
 #define ATTR_ACTION_PERMISSIONS	2
 
-extern int attr_copy_action(const char *, struct error_context *);
+EXPORT int attr_copy_action(const char *, struct error_context *);
 
 #ifdef __cplusplus
 }

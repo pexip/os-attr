@@ -22,6 +22,12 @@
 extern "C" {
 #endif
 
+#include <stdint.h>
+
+#ifndef ENOATTR
+# define ENOATTR ENODATA
+#endif
+
 /*
  *	An almost-IRIX-compatible extended attributes API
  *	(the IRIX attribute "list" operation is missing, added ATTR_SECURE).
@@ -69,7 +75,7 @@ typedef struct attrlist {
  * al_offset[i] entry points to.
  */
 typedef struct attrlist_ent {	/* data from attr_list() */
-	u_int32_t	a_valuelen;	/* number bytes in value of attr */
+	uint32_t	a_valuelen;	/* number bytes in value of attr */
 	char		a_name[1];	/* attr name (NULL terminated) */
 } attrlist_ent_t;
 
@@ -90,7 +96,7 @@ typedef struct attrlist_ent {	/* data from attr_list() */
  * operation on a cursor is to bzero() it.
  */
 typedef struct attrlist_cursor {
-	u_int32_t	opaque[4];	/* an opaque cookie */
+	uint32_t	opaque[4];	/* an opaque cookie */
 } attrlist_cursor_t;
 
 /*
@@ -119,29 +125,35 @@ typedef struct attr_multiop {
  * be set to the actual number of bytes used in the value buffer upon return.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-extern int attr_get (const char *__path, const char *__attrname,
-			char *__attrvalue, int *__valuelength, int __flags);
-extern int attr_getf (int __fd, const char *__attrname, char *__attrvalue,
-			int *__valuelength, int __flags);
+EXPORT int attr_get (const char *__path, const char *__attrname,
+			char *__attrvalue, int *__valuelength, int __flags)
+	__attribute__ ((deprecated ("Use getxattr or lgetxattr instead")));
+EXPORT int attr_getf (int __fd, const char *__attrname, char *__attrvalue,
+			int *__valuelength, int __flags)
+	__attribute__ ((deprecated ("Use fgetxattr instead")));
 
 /*
  * Set the value of an attribute, creating the attribute if necessary.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-extern int attr_set (const char *__path, const char *__attrname,
+EXPORT int attr_set (const char *__path, const char *__attrname,
 			const char *__attrvalue, const int __valuelength,
-			int __flags);
-extern int attr_setf (int __fd, const char *__attrname,
+			int __flags)
+	__attribute__ ((deprecated ("Use setxattr or lsetxattr instead")));
+EXPORT int attr_setf (int __fd, const char *__attrname,
 			const char *__attrvalue, const int __valuelength,
-			int __flags);
+			int __flags)
+	__attribute__ ((deprecated ("Use fsetxattr instead")));
 
 /*
  * Remove an attribute.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-extern int attr_remove (const char *__path, const char *__attrname,
-			int __flags);
-extern int attr_removef (int __fd, const char *__attrname, int __flags);
+EXPORT int attr_remove (const char *__path, const char *__attrname,
+			int __flags)
+	__attribute__ ((deprecated ("Use removexattr or lremovexattr instead")));
+EXPORT int attr_removef (int __fd, const char *__attrname, int __flags)
+	__attribute__ ((deprecated ("Use fremovexattr instead")));
 
 /*
  * List the names and sizes of the values of all the attributes of an object.
@@ -150,10 +162,12 @@ extern int attr_removef (int __fd, const char *__attrname, int __flags);
  * fit into the buffer on the first system call.
  * The return value is -1 on error (w/errno set appropriately), 0 on success.
  */
-int attr_list(const char *__path, char *__buffer, const int __buffersize,
-		int __flags, attrlist_cursor_t *__cursor);
-int attr_listf(int __fd, char *__buffer, const int __buffersize,
-		int __flags, attrlist_cursor_t *__cursor);
+EXPORT int attr_list(const char *__path, char *__buffer, const int __buffersize,
+		int __flags, attrlist_cursor_t *__cursor)
+	__attribute__ ((deprecated ("Use listxattr or llistxattr instead")));
+EXPORT int attr_listf(int __fd, char *__buffer, const int __buffersize,
+		int __flags, attrlist_cursor_t *__cursor)
+	__attribute__ ((deprecated ("Use flistxattr instead")));
 
 /*
  * Operate on multiple attributes of the same object simultaneously.
@@ -172,10 +186,12 @@ int attr_listf(int __fd, char *__buffer, const int __buffersize,
  * the corresponding "simple" attribute interface.  For example: the args
  * to a ATTR_OP_GET are the same as the args to an attr_get() call.
  */
-extern int attr_multi (const char *__path, attr_multiop_t *__oplist,
-			int __count, int __flags);
-extern int attr_multif (int __fd, attr_multiop_t *__oplist,
-			int __count, int __flags);
+EXPORT int attr_multi (const char *__path, attr_multiop_t *__oplist,
+			int __count, int __flags)
+	__attribute__ ((deprecated ("Use getxattr, setxattr, listxattr, removexattr instead")));
+EXPORT int attr_multif (int __fd, attr_multiop_t *__oplist,
+			int __count, int __flags)
+	__attribute__ ((deprecated ("Use getxattr, setxattr, listxattr, removexattr instead")));
 
 #ifdef __cplusplus
 }
