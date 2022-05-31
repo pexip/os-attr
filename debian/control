@@ -5,12 +5,12 @@ Maintainer: Pexip AS <packaging@pexip.com>
 XSBC-Pexip-Original-Maintainer: Guillem Jover <guillem@debian.org>
 Rules-Requires-Root: no
 Build-Depends:
- debhelper (>= 11),
+ debhelper-compat (= 13),
  autoconf,
  automake,
  gettext,
  libtool,
-Standards-Version: 4.3.0
+Standards-Version: 4.5.1
 Homepage: https://savannah.nongnu.org/projects/attr/
 Vcs-Browser: https://git.hadrons.org/cgit/debian/pkgs/attr.git
 Vcs-Git: https://git.hadrons.org/git/debian/pkgs/attr.git
