@@ -2,7 +2,7 @@
   File: getfattr.c
   (Linux Extended Attributes)
 
-  Copyright (C) 2001-2002 Andreas Gruenbacher <a.gruenbacher@bestbits.at>
+  Copyright (C) 2001-2002 Andreas Gruenbacher <andreas.gruenbacher@gmail.com>
   Copyright (C) 2001-2002 Silicon Graphics, Inc.  All Rights Reserved.
 
   This program is free software: you can redistribute it and/or modify it
@@ -46,6 +46,7 @@ struct option long_options[] = {
 	{ "only-values",	0, 0, 'v' },
 	{ "no-dereference",	0, 0, 'h' },
 	{ "absolute-names",	0, 0, 'a' },
+	{ "one-file-system",	0, 0, 1 },
 	{ "recursive",		0, 0, 'R' },
 	{ "logical",		0, 0, 'L' },
 	{ "physical",		0, 0, 'P' },
@@ -109,6 +110,10 @@ int pstrcmp(const void *a, const void *b)
 int well_enough_printable(const char *value, size_t size)
 {
 	size_t n, nonpr = 0;
+
+	/* Don't count the NULL terminator if there is one */
+	if (size && !value[size - 1])
+		size--;
 
 	for (n=0; n < size; n++)
 		if (!isprint(*value++))
@@ -386,6 +391,7 @@ void help(void)
 "      --match=pattern     only get attributes with names matching pattern\n"
 "      --only-values       print the bare values only\n"
 "  -h, --no-dereference    do not dereference symbolic links\n"
+"      --one-file-system   skip files on different filesystems\n"
 "      --absolute-names    don't strip leading '/' in pathnames\n"
 "  -R, --recursive         recurse into subdirectories\n"
 "  -L, --logical           logical walk, follow symbolic links\n"
@@ -459,6 +465,10 @@ int main(int argc, char *argv[])
 
 			case 'R':
 				walk_flags |= WALK_TREE_RECURSIVE;
+				break;
+
+			case 1: /* one filesystem */
+				walk_flags |= WALK_TREE_ONE_FILESYSTEM;
 				break;
 
 			case 'V':

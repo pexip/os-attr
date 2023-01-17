@@ -3,7 +3,9 @@ Description: Only include the compat syscall stubs on Linux systems
  These are Linux specific syscalls. Other systems either already have
  these function on their libc, or would need different implementations.
  This restores the previous behavior before the build system modernization.
+Origin: vendor
 Forwarded: yes
+Applied-Upstream: 2.5.1+, commit:7b3423dcbf6775539124c52a59e8bc76e33596f6
 
 ---
  configure.ac          |    6 ++++++
@@ -20,8 +22,8 @@ Forwarded: yes
  AC_PROG_CC
  AM_PROG_CC_C_O
  AC_USE_SYSTEM_EXTENSIONS
-@@ -49,6 +50,11 @@ dnl Automatically increment the revision
- LT_REVISION=$(echo "${PACKAGE_VERSION}" | tr -d .)
+@@ -54,6 +55,11 @@ fi
+ LT_REVISION=$(printf "%d%d%02d" "$1" "$2" "$3")
  AC_SUBST(LT_REVISION)
  
 +AS_CASE([$host_os],

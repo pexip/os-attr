@@ -14,7 +14,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-AC_INIT([attr], [2.4.48], [acl-devel@nongnu.org])
+AC_INIT([attr], [2.5.1], [acl-devel@nongnu.org])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_HEADER([include/config.h])
@@ -30,6 +30,7 @@ AC_C_CONST
 AC_TYPE_MODE_T
 AC_FUNC_ALLOCA
 AC_FUNC_GCC_VISIBILITY
+AC_SYS_LARGEFILE
 
 AM_PROG_AR
 LT_INIT
@@ -44,7 +45,12 @@ AS_IF([test "x$enable_debug" = "xyes"],
 	[CPPFLAGS="$CPPFLAGS -DNDEBUG"])
 
 dnl Automatically increment the revision for every release.
-LT_REVISION=$(echo "${PACKAGE_VERSION}" | tr -d .)
+set -- $(IFS=.; echo ${PACKAGE_VERSION})
+if test $# -ne 3 -o ${#1} -gt 1 -o ${#2} -gt 1 -o ${#3} -gt 2; then
+	echo "This PACKAGE_VERSION breaks LT_REVISION" >&2
+	exit 1
+fi
+LT_REVISION=$(printf "%d%d%02d" "$1" "$2" "$3")
 AC_SUBST(LT_REVISION)
 
 AC_CONFIG_COMMANDS([include/attr],
