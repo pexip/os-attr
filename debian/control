@@ -14,7 +14,7 @@ Standards-Version: 4.5.1
 Homepage: https://savannah.nongnu.org/projects/attr/
 Vcs-Browser: https://git.hadrons.org/cgit/debian/pkgs/attr.git
 Vcs-Git: https://git.hadrons.org/git/debian/pkgs/attr.git
-XS-Pexip-Upstream: http://deb.debian.org/debian/ bullseye
+XS-Pexip-Upstream: http://deb.debian.org/debian/ bookworm
 
 Package: attr
 Architecture: any
