@@ -35,7 +35,8 @@ For each file,
 .B getfattr
 displays the file name,
 and the set of extended attribute names (and optionally values) which
-are associated with that file.
+are associated with that file. Per default only attributes in the user
+namespace are displayed, see \f3\-m\f1.
 .PP
 The output format of
 .B "getfattr \-d"
@@ -65,8 +66,7 @@ pairs associated with the specified file.
 Dump the value of the named extended attribute.
 .TP
 .BR \-d ", " \-\-dump
-Dump the values of all extended attributes associated with
-.IR pathname .
+Dump the values of all matched extended attributes.
 .TP
 .BR \-e " \f2en\f1, " \-\-encoding "=\f2en\f1"
 Encode values after retrieving them.
@@ -74,7 +74,7 @@ Valid values of
 .I en
 are "text", "hex", and "base64".
 Values encoded as text strings are enclosed in double quotes ("),
-while strings encoded as hexidecimal and base64 are prefixed with
+while strings encoded as hexadecimal and base64 are prefixed with
 0x and 0s, respectively.
 .TP
 .BR \-h ", " \-\-no-dereference
@@ -129,10 +129,14 @@ All remaining parameters are interpreted as file names, even if they
 start with a dash character.
 .SH AUTHOR
 Andreas Gruenbacher,
-.RI < a.gruenbacher@bestbits.at >
+.RI < andreas.gruenbacher@gmail.com >
 and the SGI XFS development team,
 .RI < linux-xfs@oss.sgi.com >.
 .P
-Please send your bug reports or comments to these addresses.
+Please send your bug reports or comments to
+.RI < https://savannah.nongnu.org/bugs/?group=attr >
+or
+.RI < acl-devel@nongnu.org >.
 .SH "SEE ALSO"
-setfattr(1), and attr(5).
+.BR setfattr (1),
+.BR attr (5)
