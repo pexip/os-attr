@@ -290,7 +290,7 @@ attr_list(const char *path, char *buffer, const int buffersize, int flags,
 {
 	const char *l;
 	int length, vlength, count = 0;
-	char lbuf[MAXLISTLEN];
+	char lbuf[MAXLISTLEN+1];
 	char name[MAXNAMELEN+16];
 	int start_offset, end_offset;
 
@@ -298,14 +298,15 @@ attr_list(const char *path, char *buffer, const int buffersize, int flags,
 		errno = EINVAL;
 		return -1;
 	}
-	bzero(buffer, sizeof(attrlist_t));
+	memset(buffer, 0, sizeof(attrlist_t));
 
 	if (flags & ATTR_DONTFOLLOW)
-		length = llistxattr(path, lbuf, sizeof(lbuf));
+		length = llistxattr(path, lbuf, sizeof(lbuf) - 1);
 	else
-		length = listxattr(path, lbuf, sizeof(lbuf));
+		length = listxattr(path, lbuf, sizeof(lbuf) - 1);
 	if (length <= 0)
 		return length;
+	lbuf[length] = 0;  /* not supposed to be necessary */
 
 	start_offset = sizeof(attrlist_t);
 	end_offset = buffersize & ~(8-1);	/* 8 byte align */
@@ -340,7 +341,7 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
 {
 	const char *l;
 	int length, vlength, count = 0;
-	char lbuf[MAXLISTLEN];
+	char lbuf[MAXLISTLEN+1];
 	char name[MAXNAMELEN+16];
 	int start_offset, end_offset;
 
@@ -348,11 +349,12 @@ attr_listf(int fd, char *buffer, const int buffersize, int flags,
 		errno = EINVAL;
 		return -1;
 	}
-	bzero(buffer, sizeof(attrlist_t));
+	memset(buffer, 0, sizeof(attrlist_t));
 
-	length = flistxattr(fd, lbuf, sizeof(lbuf));
+	length = flistxattr(fd, lbuf, sizeof(lbuf) - 1);
 	if (length < 0)
 		return length;
+	lbuf[length] = 0;  /* not supposed to be necessary */
 
 	start_offset = sizeof(attrlist_t);
 	end_offset = buffersize & ~(8-1);	/* 8 byte align */
@@ -391,7 +393,7 @@ attr_single(const char *path, attr_multiop_t *op, int flags)
 {
 	int r = -1;
 
-	errno = -EINVAL;
+	errno = EINVAL;
 	flags |= op->am_flags;
 	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_get(path, op->am_attrname, op->am_attrvalue,
@@ -409,7 +411,7 @@ attr_singlef(const int fd, attr_multiop_t *op, int flags)
 {
 	int r = -1;
 
-	errno = -EINVAL;
+	errno = EINVAL;
 	flags |= op->am_flags;
 	if (op->am_opcode == ATTR_OP_GET)
 		r = attr_getf(fd, op->am_attrname, op->am_attrvalue,

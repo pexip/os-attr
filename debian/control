@@ -6,11 +6,12 @@ XSBC-Pexip-Original-Maintainer: Guillem Jover <guillem@debian.org>
 Rules-Requires-Root: no
 Build-Depends:
  debhelper-compat (= 13),
+ debhelper (>= 13.10),
  autoconf,
  automake,
  gettext,
  libtool,
-Standards-Version: 4.5.1
+Standards-Version: 4.6.2
 Homepage: https://savannah.nongnu.org/projects/attr/
 Vcs-Browser: https://git.hadrons.org/cgit/debian/pkgs/attr.git
 Vcs-Git: https://git.hadrons.org/git/debian/pkgs/attr.git
@@ -68,6 +69,7 @@ Description: extended attribute handling - shared library
 
 Package: attr-udeb
 Package-Type: udeb
+Build-Profiles: <!noudeb>
 Section: debian-installer
 Architecture: any
 Depends:
@@ -78,6 +80,7 @@ Description: utilities for manipulating filesystem extended attributes
 
 Package: libattr1-udeb
 Package-Type: udeb
+Build-Profiles: <!noudeb>
 Section: debian-installer
 Architecture: any
 Depends:
