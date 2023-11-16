@@ -1,3 +1,9 @@
+attr (1:2.5.1-4pexip1) pexip-bookworm; urgency=medium
+
+  * Initial bookworm build
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 16 Nov 2023 09:54:56 +0000
+
 attr (1:2.5.1-4) unstable; urgency=medium
 
   * Switch to Standards-Version 4.6.2 (no changes needed).
