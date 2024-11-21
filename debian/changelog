@@ -1,3 +1,9 @@
+attr (1:2.5.1-4+pexip24u4) pexip-bookworm; urgency=medium
+
+  * Move attr to main
+
+ -- Mark Hymers <mark.hymers@pexip.com>  Thu, 21 Nov 2024 16:51:22 +0000
+
 attr (1:2.5.1-4+pexip24u3) pexip-bookworm; urgency=medium
 
   * New versioning scheme
