@@ -1,3 +1,56 @@
+attr (1:2.5.2-3) unstable; urgency=medium
+
+  * Update upstream Dutch translation. Closes: #1065512
+    Thanks to Frans Spiesschaert <Frans.Spiesschaert@yucom.be>.
+  * Switch to Standards-Version 4.7.1 (no changes needed).
+  * Improve markup and editorial changes for setfattr(1).
+    Thanks to Bjarni Ingi Gislason <bjarniig@simnet.is>. Closes: #1092503
+  * Improve font selection markup in man pages.
+  * Reorganize patches to clearly separate upstream from local ones.
+
+ -- Guillem Jover <guillem@debian.org>  Fri, 21 Feb 2025 11:29:11 +0100
+
+attr (1:2.5.2-2) unstable; urgency=medium
+
+  * Drop backwards compatibility <attr/xattr.h> header, provided by libc
+    implementations as <sys/xattr.h>. It's been more than 5 years, since
+    upstream dropped that header, and we reintroduced it for backwards
+    compatibility. The remaining users seem pretty abandoned, we'll just
+    drop the header and let those handle the switch or meet their own fate.
+  * Take patch from upstream to add include <libgen.h> header for basename(2)
+    to fix build failure on musl systems. Closes: #1070123
+  * Mention the origins of ENOATTR in man pages. Closes: #463119
+  * Switch to Standards-Version 4.7.0 (no changes needed).
+
+ -- Guillem Jover <guillem@debian.org>  Sat, 12 Oct 2024 20:00:33 +0200
+
+attr (1:2.5.2-1) unstable; urgency=medium
+
+  * New upstream release.
+    - Remove upstream patches included in this release.
+    - Update upstream signing key.
+    - Do not list no longer existing files in not-installed.
+
+ -- Guillem Jover <guillem@debian.org>  Thu, 25 Jan 2024 04:28:26 +0100
+
+attr (1:2.5.1-5) unstable; urgency=medium
+
+  * Wrap fields in debian/tests/control.
+  * Apply upstream patches first then local ones in the debian/patches/series.
+  * Update manual page references from attr(5) to xattr(7).
+  * Rework attr(1) manual page:
+    - Fix formatting markup.
+    - Use namespace instead of address space.
+    - Update xattr namespaces used.
+    - Make it clear the command is a legacy tool for compatibility with
+      the IRIX command of the same name.
+    - Mention that the initial intended filesystem was XFS, but can work
+      with other filesystems.
+    - Change reference to xfsdump() to reference to GNU tar xattr support.
+    Closes: #1034439
+
+ -- Guillem Jover <guillem@debian.org>  Mon, 25 Dec 2023 00:02:22 +0100
+
 attr (1:2.5.1-4) unstable; urgency=medium
 
   * Switch to Standards-Version 4.6.2 (no changes needed).
