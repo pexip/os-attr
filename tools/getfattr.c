@@ -38,7 +38,7 @@
 #define CMD_LINE_OPTIONS "n:de:m:hRLP"
 #define CMD_LINE_SPEC "[-hRLP] [-n name|-d] [-e en] [-m pattern] path..."
 
-struct option long_options[] = {
+static const struct option long_options[] = {
 	{ "name",		1, 0, 'n' },
 	{ "dump",		0, 0, 'd' },
 	{ "encoding",		1, 0, 'e' },
@@ -388,7 +388,7 @@ void help(void)
 "  -n, --name=name         get the named extended attribute value\n"
 "  -d, --dump              get all extended attribute values\n"
 "  -e, --encoding=...      encode values (as 'text', 'hex' or 'base64')\n"
-"      --match=pattern     only get attributes with names matching pattern\n"
+"  -m, --match=pattern     only get attributes with names matching pattern\n"
 "      --only-values       print the bare values only\n"
 "  -h, --no-dereference    do not dereference symbolic links\n"
 "      --one-file-system   skip files on different filesystems\n"

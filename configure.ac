@@ -14,15 +14,17 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 
-AC_INIT([attr], [2.5.1], [acl-devel@nongnu.org])
+AC_PREREQ([2.69])
+AC_INIT([attr], [2.5.2], [acl-devel@nongnu.org])
 AC_CONFIG_AUX_DIR([build-aux])
 AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_HEADER([include/config.h])
+AC_CONFIG_HEADERS([include/config.h])
 AC_PREFIX_DEFAULT(/usr)
 
-AM_INIT_AUTOMAKE([-Wall foreign 1.11 dist-xz subdir-objects])
+AM_INIT_AUTOMAKE([-Wall foreign 1.15 dist-xz subdir-objects])
 AM_SILENT_RULES([yes])
 
+AC_CANONICAL_HOST
 AC_PROG_CC
 AM_PROG_CC_C_O
 AC_USE_SYSTEM_EXTENSIONS
@@ -46,12 +48,14 @@ AS_IF([test "x$enable_debug" = "xyes"],
 
 dnl Automatically increment the revision for every release.
 set -- $(IFS=.; echo ${PACKAGE_VERSION})
-if test $# -ne 3 -o ${#1} -gt 1 -o ${#2} -gt 1 -o ${#3} -gt 2; then
-	echo "This PACKAGE_VERSION breaks LT_REVISION" >&2
-	exit 1
-fi
+AS_IF([test $# -ne 3 -o ${#1} -gt 1 -o ${#2} -gt 1 -o ${#3} -gt 2],
+	[AC_MSG_ERROR([This PACKAGE_VERSION breaks LT_REVISION])])
 LT_REVISION=$(printf "%d%d%02d" "$1" "$2" "$3")
 AC_SUBST(LT_REVISION)
+
+AS_CASE([$host_os],
+	[linux*], [os_linux=yes])
+AM_CONDITIONAL([OS_LINUX], [test "x$os_linux" = "xyes"])
 
 AC_CONFIG_COMMANDS([include/attr],
 	[dnl

@@ -8,19 +8,23 @@ LT_CURRENT = 2
 LT_AGE = 1
 LTVERSION = $(LT_CURRENT):$(LT_REVISION):$(LT_AGE)
 
-libattr_la_DEPENDENCIES = exports libattr/libattr.lds
+## Since libattr translates its error messages, we have to link libintl.
+## See the AM_GNU_GETTEXT documentation for details.
+libattr_la_LIBADD = $(LTLIBINTL)
+libattr_la_DEPENDENCIES = \
+	exports
 libattr_la_SOURCES = \
 	libattr/attr_copy_action.c \
 	libattr/attr_copy_check.c \
 	libattr/attr_copy_fd.c \
 	libattr/attr_copy_file.c \
 	libattr/libattr.c \
-	libattr/syscalls.c \
 	libattr/libattr.h
+if OS_LINUX
+libattr_la_SOURCES += \
+	libattr/syscalls.c
+endif
 libattr_la_CFLAGS = -include libattr/libattr.h
 libattr_la_LDFLAGS = \
 	-Wl,--version-script,$(top_srcdir)/exports \
-	-Wl,$(top_srcdir)/libattr/libattr.lds \
 	-version-info $(LTVERSION)
-
-EXTRA_DIST += libattr/libattr.lds
