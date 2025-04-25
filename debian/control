@@ -15,7 +15,7 @@ Standards-Version: 4.6.2
 Homepage: https://savannah.nongnu.org/projects/attr/
 Vcs-Browser: https://git.hadrons.org/cgit/debian/pkgs/attr.git
 Vcs-Git: https://git.hadrons.org/git/debian/pkgs/attr.git
-XS-Pexip-Upstream: http://deb.debian.org/debian/ bookworm
+XS-Pexip-Upstream: http://deb.debian.org/debian/ trixie
 
 Package: attr
 Architecture: any
